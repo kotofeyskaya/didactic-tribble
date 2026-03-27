@@ -30,6 +30,7 @@ project {
     vcsRoot(HttpsGithubComKotofeyskayaMavenSampleRefsHeadsMaster)
 
     buildType(Build1)
+    pipeline(DidacticTribble)
 }
 
 object Build1 : BuildType({
@@ -38,6 +39,29 @@ object Build1 : BuildType({
     vcs {
         root(DslContext.settingsRoot)
     }
+})
+
+object DSLTest_DidacticTribble : Pipeline({
+    id("DidacticTribble")
+    name = "didactic tribble"
+
+    repositories {
+        repository(HttpsGithubComKotofeyskayaDidacticTribbleRefsHeadsMain)
+    }
+
+    triggers {
+        vcs {
+        }
+    }
+
+    job(DSLTest_DidacticTribble_Job1)
+})
+
+object DSLTest_DidacticTribble_Job1 : Job({
+    id("Job1")
+    name = "Job 1"
+    allowReuse = true
+    enableDependencyCacheOptimization = false
 })
 
 object HttpsGithubComKotofeyskayaMavenSampleRefsHeadsMaster : GitVcsRoot({
