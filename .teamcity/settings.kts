@@ -26,20 +26,9 @@ To debug in IntelliJ Idea, open the 'Maven Projects' tool window (View
 version = "2025.11"
 
 project {
-
-    vcsRoot(HttpsGithubComKotofeyskayaMavenSampleRefsHeadsMaster)
-
-    buildType(Build)
     buildType(Build1)
+    pipeline(Pipeline1)
 }
-
-object Build : BuildType({
-    name = "Build"
-
-    vcs {
-        root(HttpsGithubComKotofeyskayaMavenSampleRefsHeadsMaster)
-    }
-})
 
 object Build1 : BuildType({
     name = "Build 1"
@@ -47,16 +36,30 @@ object Build1 : BuildType({
     vcs {
         root(DslContext.settingsRoot)
     }
+
+    steps {
+        script {
+            id = "simpleRunner"
+            scriptContent = "sleep 60"
+        }
+    }
 })
 
-object HttpsGithubComKotofeyskayaMavenSampleRefsHeadsMaster : GitVcsRoot({
-    name = "https://github.com/kotofeyskaya/maven-sample#refs/heads/master"
-    url = "https://github.com/kotofeyskaya/maven-sample"
-    branch = "refs/heads/master"
-    branchSpec = "refs/heads/*"
-    authMethod = password {
-        userName = "kotofeyskaya"
-        password = "credentialsJSON:05728551-a82b-4302-8689-aca90fcd7084"
+object Pipeline1 : Pipeline({
+    id("Pipeline1")
+    name = "Pipeline1"
+
+    repositories {
+     repository(DslContext.settingsRoot)
     }
-    param("pipelines.connectionId", "tc-cloud-github-connection")
+    dependencies {
+        snapshot(Build1) {
+            reuseBuilds = ReuseBuilds.NO
+        }
+    }
+
+    job {
+        id = "Job1"
+        name = "Job5"
+    }
 })
